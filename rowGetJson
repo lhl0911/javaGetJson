@@ -1,0 +1,30 @@
+@ResponseBody
+	@RequestMapping(value="insertAllPersonnelDatetry", produces = "application/json;charset=utf-8")
+	public String insertAllPersonnelDatetry(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{
+	 
+		request.setCharacterEncoding("UTF-8");
+	    String acceptJson="";
+	    BufferedReader br=new BufferedReader(new InputStreamReader((ServletInputStream)request.getInputStream(),"utf-8"));
+	    StringBuffer sb=new StringBuffer("");
+	    String temp;
+	    while((temp=br.readLine())!=null){
+	   	  sb.append(temp);//把接收的参数赋给sb字符串
+	     }
+	    br.close();
+	    acceptJson=sb.toString();
+		
+	    if(StringUtils.isEmpty(acceptJson)) {
+	    	return ResultUtil.getNullResult();
+	    }
+	    
+		Object result =personnelService.insertAllPersonnelDatetry(acceptJson);
+		return ResultUtil.getReturnResult(result);
+	}
+  
+  //解析接送
+  JSONObject json = JSON.parseObject(acceptJson);
+//判断是否存在字段
+		if(null == json.get("类型")) {
+			return ResultUtil.setErrorResult("参数不全");
+		}
